@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen CAD Design - Estúdio de Odontologia Digital</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e8e9ea;
+            background: #1a1b1d;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .container-header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        header {
+            background: rgba(26, 27, 29, 0.7);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+            transform: translateY(0);
+        }
+
+        header.scrolled {
+            background: rgba(26, 27, 29, 1);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            border-bottom: 2px solid rgba(90, 159, 212, 0.8);
+            padding: 0.8rem 0;
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            background-image: url('https://i.ibb.co/wFcFY77d/Ativo-1.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before,
+        .logo-icon::after {
+            display: none;
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: #e8e9ea;
+        }
+
+        .logo-text .brand {
+            font-weight: 600;
+        }
+
+        .logo-text .subtitle {
+            font-size: 0.8rem;
+            color: #5a9fd4;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #e8e9ea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: rgba(90, 159, 212, 0.2);
+            color: #5a9fd4;
+        }
+
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .language-button {
+            background: rgba(90, 159, 212, 0.1);
+            color: #e8e9ea;
+            border: 1px solid rgba(90, 159, 212, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .language-button:hover {
+            background: rgba(90, 159, 212, 0.2);
+            border-color: rgba(90, 159, 212, 0.5);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(26, 27, 29, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(90, 159, 212, 0.3);
+            border-radius: 15px;
+            padding: 0.5rem 0;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .language-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .language-option {
+            padding: 0.75rem 1.5rem;
+            color: #e8e9ea;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .language-option:hover {
+            background: rgba(90, 159, 212, 0.2);
+            color: #5a9fd4;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a1b1d 0%, #2d2f33 50%, #1a1b1d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(90, 159, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(90, 159, 212, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
+            max-width: 800px;
+        }
+
+        .hero-logo {
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        /* Para quando usar imagem real do logo */
+        .hero-logo.with-image {
+            background-image: url('https://i.ibb.co/wFcFY77d/Ativo-1.png');
+        }
+
+        .hero-logo.with-image::before,
+        .hero-logo.with-image::after {
+            display: none;
+        }
+
+        .hero-logo::before {
+            content: 'L';
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .hero-logo::after {
+            content: '✦';
+            position: absolute;
+            color: white;
+            font-size: 2rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #e8e9ea;
+            font-weight: 300;
+            animation: slideUp 1s ease-out;
+        }
+
+        .hero h1 .brand {
+            font-weight: 600;
+            background: linear-gradient(135deg, #5a9fd4, #7bb3d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #5a9fd4;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            animation: slideUp 1s ease-out 0.1s both;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            color: #a8a9aa;
+            animation: slideUp 1s ease-out 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #5a9fd4, #4a8bc2);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 35px rgba(90, 159, 212, 0.4);
+            animation: slideUp 1s ease-out 0.4s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 45px rgba(90, 159, 212, 0.6);
+        }
+
+        .portfolio {
+            padding: 8rem 0 6rem 0;
+            background: #1a1b1d;
+            margin-top: 0;
+        }
+
+        .portfolio h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #5a9fd4, #7bb3d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+            opacity: 1;
+            display: block;
+        }
+
+        .portfolio-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 4rem;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .portfolio-item {
+            background: #252629;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(90, 159, 212, 0.1);
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(90, 159, 212, 0.2);
+            border-color: rgba(90, 159, 212, 0.3);
+        }
+
+        .portfolio-image {
+            width: 100%;
+            height: 250px;
+            background: #1a1b1d;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(90, 159, 212, 0.8), rgba(74, 139, 194, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .portfolio-item:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .overlay-icon {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .portfolio-content {
+            padding: 2rem;
+        }
+
+        .portfolio-content h3 {
+            font-size: 1.4rem;
+            color: #e8e9ea;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .portfolio-content p {
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        .services {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #252629 0%, #2d2f33 50%, #252629 100%);
+        }
+
+        .services h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #5a9fd4, #7bb3d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+        }
+
+        .services-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 4rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(90, 159, 212, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(90, 159, 212, 0.3);
+            box-shadow: 0 20px 40px rgba(90, 159, 212, 0.1);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #5a9fd4, #4a8bc2);
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #e8e9ea;
+            font-weight: 500;
+        }
+
+        .service-card p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-list {
+            list-style: none;
+        }
+
+        .service-list li {
+            padding: 0.4rem 0;
+            color: #a8a9aa;
+            position: relative;
+            padding-left: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .service-list li:before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #5a9fd4;
+            font-weight: bold;
+        }
+
+        .differentials {
+            padding: 6rem 0;
+            background: #1a1b1d;
+        }
+
+        .differentials h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #5a9fd4, #7bb3d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+        }
+
+        .differentials-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 4rem;
+        }
+
+        .differentials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .differential-item {
+            padding: 3rem 2rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .differential-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(90, 159, 212, 0.3);
+            background: rgba(90, 159, 212, 0.05);
+        }
+
+        .differential-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            background: linear-gradient(135deg, #5a9fd4, #7bb3d3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .differential-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #e8e9ea;
+            font-weight: 500;
+        }
+
+        .differential-item p {
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+
+        footer {
+            background: #0f1011;
+            color: #6b7280;
+            padding: 4rem 0 2rem 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo-icon {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            background-image: url('https://i.ibb.co/wFcFY77d/Ativo-1.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .footer-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-brand {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #e8e9ea;
+            margin-bottom: 0.2rem;
+        }
+
+        .footer-subtitle {
+            font-size: 0.9rem;
+            color: #5a9fd4;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .footer-description {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 400px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e8e9ea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: rgba(90, 159, 212, 0.2);
+            border-color: rgba(90, 159, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            border-color: #bc1888;
+        }
+
+        .social-link.facebook:hover {
+            background: #1877f2;
+            border-color: #1877f2;
+        }
+
+        .social-link.linkedin:hover {
+            background: #0077b5;
+            border-color: #0077b5;
+        }
+
+        .footer-contacts h3 {
+            color: #e8e9ea;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .footer-contacts .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-contacts .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .footer-contacts .contact-icon {
+            color: #5a9fd4;
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        .footer-contacts .contact-text {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+
+        .footer-contacts .whatsapp-link {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contacts .whatsapp-link:hover {
+            color: #5a9fd4;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .design-credit {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .design-link {
+            color: #5a9fd4;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .design-link:hover {
+            color: #7bb3d3;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .portfolio-grid,
+            .services-grid,
+            .differentials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #5a9fd4, #4a8bc2);
+            transform-origin: left;
+            transform: scaleX(0);
+            z-index: 1001;
+            transition: transform 0.1s;
+        }
+
+        /* Portfolio Gallery System */
+        .portfolio-gallery {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-main-image {
+            width: 100%;
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-thumbnails {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:hover .gallery-thumbnails {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-thumb {
+            width: 40px;
+            height: 40px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-thumb.active {
+            border-color: #5a9fd4;
+        }
+
+        .gallery-thumb:hover {
+            border-color: #7bb3d3;
+            transform: scale(1.1);
+        }
+
+        .gallery-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(90, 159, 212, 0.8);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(90, 159, 212, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-prev {
+            left: -60px;
+        }
+
+        .lightbox-next {
+            right: -60px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .lightbox-prev {
+                left: -50px;
+            }
+            
+            .lightbox-next {
+                right: -50px;
+            }
+            
+            .lightbox-close {
+                top: -50px;
+                width: 35px;
+                height: 35px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator"></div>
+    
+    <header>
+        <nav class="container-header">
+            <div class="logo-container">
+                <div class="logo-icon"></div>
+                <div class="logo-text">
+                    <div class="brand">Lumen CAD</div>
+                    <div class="subtitle">Design</div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#portfolio">Portfólio</a></li>
+                    <li><a href="#services">Serviços</a></li>
+                    <li><a href="#differentials">Diferenciais</a></li>
+                </ul>
+                <div class="language-selector">
+                    <div class="language-button" onclick="toggleLanguageDropdown()">
+                        <span>🌐</span>
+                        <span id="current-lang">PT</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="language-dropdown" id="languageDropdown">
+                        <div class="language-option" onclick="changeLanguage('pt', 'Português')">
+                            🇧🇷 Português
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('en', 'English')">
+                            🇺🇸 English
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('de', 'Deutsch')">
+                            🇩🇪 Deutsch
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('es', 'Español')">
+                            🇪🇸 Español
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="mobile-menu">☰</button>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content container">
+            <div class="hero-logo with-image"></div>
+            <div class="hero-subtitle">Estúdio de Odontologia Digital</div>
+            <h1><span class="brand">Lumen CAD</span> Design</h1>
+            <p>Criando sorrisos e próteses odontológicas com soluções de alta precisão para dentistas e laboratórios</p>
+            <a href="https://wa.link/g7x7mp" target="_blank" class="cta-button">Solicite um Orçamento</a>
+        </div>
+    </section>
+
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2>Nosso Portfólio</h2>
+            <p class="portfolio-subtitle">Exemplos da nossa excelência em design CAD para odontologia digital</p>
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-gallery="anteriores">
+                    <div class="portfolio-gallery">
+                        <div class="gallery-main-image" onclick="openLightbox('anteriores', 0)"></div>
+                        <div class="gallery-thumbnails">
+                            <!-- Miniaturas serão geradas automaticamente -->
+                        </div>
+                        <div class="gallery-indicator">Carregando...</div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Restaurações Anteriores</h3>
+                        <p>Design de facetas e coroas anteriores com anatomia perfeita e estética natural, garantindo sorrisos harmoniosos.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-gallery="fixas">
+                    <div class="portfolio-gallery">
+                        <div class="gallery-main-image" onclick="openLightbox('fixas', 0)"></div>
+                        <div class="gallery-thumbnails">
+                            <!-- Miniaturas serão geradas automaticamente -->
+                        </div>
+                        <div class="gallery-indicator">Carregando...</div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Próteses Fixas</h3>
+                        <p>Pontes de múltiplos elementos com design anatômico preciso, distribuição oclusal ideal e conexões robustas.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-gallery="posteriores">
+                    <div class="portfolio-gallery">
+                        <div class="gallery-main-image" onclick="openLightbox('posteriores', 0)"></div>
+                        <div class="gallery-thumbnails">
+                            <!-- Miniaturas serão geradas automaticamente -->
+                        </div>
+                        <div class="gallery-indicator">Carregando...</div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Restaurações Posteriores</h3>
+                        <p>Inlays, onlays e overlays com anatomia oclusal detalhada para perfeita funcionalidade mastigatória.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-gallery="implantodontia">
+                    <div class="portfolio-gallery">
+                        <div class="gallery-main-image" onclick="openLightbox('implantodontia', 0)"></div>
+                        <div class="gallery-thumbnails">
+                            <!-- Miniaturas serão geradas automaticamente -->
+                        </div>
+                        <div class="gallery-indicator">Carregando...</div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Implantodontia</h3>
+                        <p>Guias cirúrgicos precisos, barras sobre implantes e planejamento digital completo para casos complexos.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-gallery="enceramentos">
+                    <div class="portfolio-gallery">
+                        <div class="gallery-main-image" onclick="openLightbox('enceramentos', 0)"></div>
+                        <div class="gallery-thumbnails">
+                            <!-- Miniaturas serão geradas automaticamente -->
+                        </div>
+                        <div class="gallery-indicator">Carregando...</div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>Enceramentos</h3>
+                        <p>Enceramentos diagnósticos e estéticos virtuais para planejamento prévio de casos complexos e análise de resultados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Nossos Serviços</h2>
+            <p class="services-subtitle">Transformamos scans intraorais em projetos protéticos digitais prontos para produção</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-tooth"></i></div>
+                    <h3>Restaurações Estéticas</h3>
+                    <p>Design CAD de alta precisão para restaurações com foco na estética e funcionalidade</p>
+                    <ul class="service-list">
+                        <li>Coroas unitárias anteriores e posteriores</li>
+                        <li>Facetas laminadas cerâmicas</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-link"></i></div>
+                    <h3>Próteses Fixas</h3>
+                    <p>Pontes e estruturas protéticas complexas com distribuição oclusal ideal</p>
+                    <ul class="service-list">
+                        <li>Pontes de 3 ou mais elementos</li>
+                        <li>Estruturas múltiplas conectadas</li>
+                        <li>Design anatômico personalizado</li>
+                        <li>Análise biomecânica avançada</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-tools"></i></div>
+                    <h3>Implantodontia Digital</h3>
+                    <p>Soluções completas para reabilitação sobre implantes</p>
+                    <ul class="service-list">
+                        <li>Planejamento reverso</li>
+                        <li>Análise de espaço protético</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <h3>Planejamento Digital</h3>
+                    <p>Análise e planejamento digital para resultados previsíveis</p>
+                    <ul class="service-list">
+                        <li>Enceramento diagnóstico virtual</li>
+                        <li>DSD (Digital Smile Design)</li>
+                        <li>Análise facial digital integrada</li>
+                        <li>Mock-up virtual</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Serviços Complementares</h3>
+                    <p>Soluções adicionais para otimizar seu fluxo digital</p>
+                    <ul class="service-list">
+                        <li>Modelos digitais STL</li>
+                        <li>Articulação virtual</li>
+                        <li>Consultoria técnica especializada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="differentials" class="differentials">
+        <div class="container">
+            <h2>Nossos Diferenciais</h2>
+            <p class="differentials-subtitle">Por que escolher a Lumen CAD Design para seus projetos protéticos</p>
+            <div class="differentials-grid">
+                <div class="differential-item">
+                    <span class="differential-icon"><i class="fas fa-bolt"></i></span>
+                    <h3>Rapidez</h3>
+                    <p>Entrega ágil sem comprometer a qualidade. Fluxo digital otimizado para atender prazos apertados e urgências clínicas.</p>
+                </div>
+                <div class="differential-item">
+                    <span class="differential-icon"><i class="fas fa-crosshairs"></i></span>
+                    <h3>Precisão</h3>
+                    <p>Design CAD de alta precisão com tecnologia de ponta, garantindo ajustes perfeitos e resultados clinicamente previsíveis.</p>
+                </div>
+                <div class="differential-item">
+                    <span class="differential-icon"><i class="fas fa-star"></i></span>
+                    <h3>Estética</h3>
+                    <p>Foco na excelência estética com anatomia dental personalizada, respeitando características individuais de cada paciente.</p>
+                </div>
+                <div class="differential-item">
+                    <span class="differential-icon"><i class="fas fa-cube"></i></span>
+                    <h3>Inovação</h3>
+                    <p>Fluxo digital completo e inovador que elimina surpresas, garantindo resultados consistentes e reproduzíveis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section footer-logo">
+                    <div class="footer-logo-container">
+                        <div class="footer-logo-icon"></div>
+                        <div class="footer-logo-text">
+                            <div class="footer-brand">Lumen CAD™</div>
+                            <div class="footer-subtitle">Design</div>
+                        </div>
+                    </div>
+                    <p class="footer-description">Se você tem alguma dúvida ou já é cliente Lumen, entre em contato. Será um prazer atendê-lo!</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/lumen.cad/" target="_blank" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section footer-contacts">
+                    <h3>Contatos</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                            <span class="contact-text">São Paulo, SP - Brasil</span>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon"><i class="fas fa-phone"></i></span>
+                            <a href="https://wa.link/g7x7mp" target="_blank" class="contact-text whatsapp-link">+55 (11) 91717-5059</a>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+                            <span class="contact-text">contato@lumencad.com.br</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">Copyright © Lumen CAD Design - All rights reserved.</p>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <button class="lightbox-nav lightbox-prev" onclick="previousImage()">‹</button>
+            <img class="lightbox-image" id="lightboxImage" src="" alt="">
+            <button class="lightbox-nav lightbox-next" onclick="nextImage()">›</button>
+            <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+        </div>
+    </div>
+
+    <script>
+        // Scroll indicator and header persistence
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const scrolled = (window.pageYOffset / (document.body.scrollHeight - window.innerHeight)) * 100;
+            
+            // Update scroll indicator
+            document.querySelector('.scroll-indicator').style.transform = `scaleX(${scrolled / 100})`;
+            
+            // Header effects - mais visível
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+                console.log('Header scrolled - background should be more solid');
+            } else {
+                header.classList.remove('scrolled');
+                console.log('Header at top - background should be transparent');
+            }
+            
+            // Hide/show header on scroll direction
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                // Scrolling down - hide header
+                header.classList.add('hidden');
+                console.log('Header hidden - scrolling down');
+            } else {
+                // Scrolling up - show header
+                header.classList.remove('hidden');
+                console.log('Header shown - scrolling up');
+            }
+            
+            lastScrollY = window.scrollY;
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe portfolio items, service cards and differential items
+        document.querySelectorAll('.portfolio-item, .service-card, .differential-item, .contact-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(el);
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.background = 'rgba(26, 27, 29, 0.98)';
+                navLinks.style.padding = '2rem';
+                navLinks.style.backdropFilter = 'blur(20px)';
+            }
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+            document.body.style.transform = 'translateY(0)';
+        });
+
+        document.body.style.opacity = '0';
+        document.body.style.transform = 'translateY(20px)';
+        document.body.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+
+        // Add hover effects to logo
+        const heroLogo = document.querySelector('.hero-logo');
+        if (heroLogo) {
+            heroLogo.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            heroLogo.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        }
+
+        // Dynamic text animation
+        const texts = [
+            'Criando sorrisos com precisão digital',
+            'Transformando scans em arte protética',
+            'Inovação em cada projeto CAD',
+            'Excelência em odontologia digital'
+        ];
+        
+        let textIndex = 0;
+        const heroP = document.querySelector('.hero p');
+        
+        if (heroP) {
+            setInterval(() => {
+                heroP.style.opacity = '0';
+                setTimeout(() => {
+                    textIndex = (textIndex + 1) % texts.length;
+                    heroP.textContent = texts[textIndex];
+                    heroP.style.opacity = '1';
+                }, 500);
+            }, 4000);
+        }
+
+        // Translation system
+        const translations = {
+            pt: {
+                nav: {
+                    inicio: 'Início',
+                    portfolio: 'Portfólio',
+                    servicos: 'Serviços',
+                    diferenciais: 'Diferenciais'
+                },
+                hero: {
+                    subtitle: 'Estúdio de Odontologia Digital',
+                    title: 'Lumen CAD',
+                    titleSuffix: 'Design',
+                    description: 'Criando sorrisos e próteses odontológicas com soluções de alta precisão para dentistas e laboratórios',
+                    cta: 'Solicite um Orçamento'
+                },
+                portfolio: {
+                    title: 'Nosso Portfólio',
+                    subtitle: 'Exemplos da nossa excelência em design CAD para odontologia digital',
+                    anteriores: {
+                        title: 'Restaurações Anteriores',
+                        description: 'Design de facetas e coroas anteriores com anatomia perfeita e estética natural, garantindo sorrisos harmoniosos.'
+                    },
+                    fixas: {
+                        title: 'Próteses Fixas',
+                        description: 'Pontes de múltiplos elementos com design anatômico preciso, distribuição oclusal ideal e conexões robustas.'
+                    },
+                    posteriores: {
+                        title: 'Restaurações Posteriores',
+                        description: 'Inlays, onlays e overlays com anatomia oclusal detalhada para perfeita funcionalidade mastigatória.'
+                    },
+                    implantodontia: {
+                        title: 'Implantodontia',
+                        description: 'Guias cirúrgicos precisos, barras sobre implantes e planejamento digital completo para casos complexos.'
+                    },
+                    enceramentos: {
+                        title: 'Enceramentos',
+                        description: 'Enceramentos diagnósticos e estéticos virtuais para planejamento prévio de casos complexos e análise de resultados.'
+                    }
+                },
+                services: {
+                    title: 'Nossos Serviços',
+                    subtitle: 'Transformamos scans intraorais em projetos protéticos digitais prontos para produção',
+                    esteticas: {
+                        title: 'Restaurações Estéticas',
+                        description: 'Design CAD de alta precisão para restaurações com foco na estética e funcionalidade'
+                    },
+                    fixas: {
+                        title: 'Próteses Fixas',
+                        description: 'Pontes e estruturas protéticas complexas com distribuição oclusal ideal'
+                    },
+                    implantes: {
+                        title: 'Implantodontia Digital',
+                        description: 'Soluções completas para reabilitação sobre implantes'
+                    },
+                    planejamento: {
+                        title: 'Planejamento Digital',
+                        description: 'Análise e planejamento digital para resultados previsíveis'
+                    },
+                    complementares: {
+                        title: 'Serviços Complementares',
+                        description: 'Soluções adicionais para otimizar seu fluxo digital'
+                    }
+                },
+                differentials: {
+                    title: 'Nossos Diferenciais',
+                    subtitle: 'Por que escolher a Lumen CAD Design para seus projetos protéticos',
+                    rapidez: {
+                        title: 'Rapidez',
+                        description: 'Entrega ágil sem comprometer a qualidade. Fluxo digital otimizado para atender prazos apertados e urgências clínicas.'
+                    },
+                    precisao: {
+                        title: 'Precisão',
+                        description: 'Design CAD de alta precisão com tecnologia de ponta, garantindo ajustes perfeitos e resultados clinicamente previsíveis.'
+                    },
+                    estetica: {
+                        title: 'Estética',
+                        description: 'Foco na excelência estética com anatomia dental personalizada, respeitando características individuais de cada paciente.'
+                    },
+                    inovacao: {
+                        title: 'Inovação',
+                        description: 'Fluxo digital completo e inovador que elimina surpresas, garantindo resultados consistentes e reproduzíveis.'
+                    }
+                },
+                footer: {
+                    copyright: '© 2025 Lumen CAD Design. Todos os direitos reservados. Estúdio de Odontologia Digital - Criando sorrisos com precisão e inovação.'
+                }
+            },
+            en: {
+                nav: {
+                    inicio: 'Home',
+                    portfolio: 'Portfolio',
+                    servicos: 'Services',
+                    diferenciais: 'Advantages'
+                },
+                hero: {
+                    subtitle: 'Digital Dentistry Studio',
+                    title: 'Lumen CAD',
+                    titleSuffix: 'Design',
+                    description: 'Creating smiles and dental prosthetics with high-precision solutions for dentists and laboratories',
+                    cta: 'Request a Quote'
+                },
+                portfolio: {
+                    title: 'Our Portfolio',
+                    subtitle: 'Examples of our excellence in CAD design for digital dentistry',
+                    anteriores: {
+                        title: 'Anterior Restorations',
+                        description: 'Design of anterior veneers and crowns with perfect anatomy and natural aesthetics, ensuring harmonious smiles.'
+                    },
+                    fixas: {
+                        title: 'Fixed Prosthetics',
+                        description: 'Multi-element bridges with precise anatomical design, ideal occlusal distribution and robust connections.'
+                    },
+                    posteriores: {
+                        title: 'Posterior Restorations',
+                        description: 'Inlays, onlays and overlays with detailed occlusal anatomy for perfect masticatory functionality.'
+                    },
+                    implantodontia: {
+                        title: 'Implant Dentistry',
+                        description: 'Precise surgical guides, implant bars and complete digital planning for complex cases.'
+                    },
+                    enceramentos: {
+                        title: 'Wax-ups',
+                        description: 'Virtual diagnostic and aesthetic wax-ups for preliminary planning of complex cases and result analysis.'
+                    }
+                },
+                services: {
+                    title: 'Our Services',
+                    subtitle: 'We transform intraoral scans into digital prosthetic projects ready for production',
+                    esteticas: {
+                        title: 'Aesthetic Restorations',
+                        description: 'High-precision CAD design for restorations focused on aesthetics and functionality'
+                    },
+                    fixas: {
+                        title: 'Fixed Prosthetics',
+                        description: 'Bridges and complex prosthetic structures with ideal occlusal distribution'
+                    },
+                    implantes: {
+                        title: 'Digital Implant Dentistry',
+                        description: 'Complete solutions for implant rehabilitation'
+                    },
+                    planejamento: {
+                        title: 'Digital Planning',
+                        description: 'Digital analysis and planning for predictable results'
+                    },
+                    complementares: {
+                        title: 'Complementary Services',
+                        description: 'Additional solutions to optimize your digital workflow'
+                    }
+                },
+                differentials: {
+                    title: 'Our Advantages',
+                    subtitle: 'Why choose Lumen CAD Design for your prosthetic projects',
+                    rapidez: {
+                        title: 'Speed',
+                        description: 'Fast delivery without compromising quality. Optimized digital workflow to meet tight deadlines and clinical emergencies.'
+                    },
+                    precisao: {
+                        title: 'Precision',
+                        description: 'High-precision CAD design with cutting-edge technology, ensuring perfect adjustments and clinically predictable results.'
+                    },
+                    estetica: {
+                        title: 'Aesthetics',
+                        description: 'Focus on aesthetic excellence with personalized dental anatomy, respecting individual characteristics of each patient.'
+                    },
+                    inovacao: {
+                        title: 'Innovation',
+                        description: 'Complete and innovative digital workflow that eliminates surprises, ensuring consistent and reproducible results.'
+                    }
+                },
+                footer: {
+                    copyright: '© 2025 Lumen CAD Design. All rights reserved. Digital Dentistry Studio - Creating smiles with precision and innovation.'
+                }
+            },
+            de: {
+                nav: {
+                    inicio: 'Startseite',
+                    portfolio: 'Portfolio',
+                    servicos: 'Dienstleistungen',
+                    diferenciais: 'Vorteile'
+                },
+                hero: {
+                    subtitle: 'Digitales Zahnmedizin-Studio',
+                    title: 'Lumen CAD',
+                    titleSuffix: 'Design',
+                    description: 'Schaffung von Lächeln und Zahnersatz mit hochpräzisen Lösungen für Zahnärzte und Labore',
+                    cta: 'Angebot anfordern'
+                },
+                portfolio: {
+                    title: 'Unser Portfolio',
+                    subtitle: 'Beispiele unserer Exzellenz im CAD-Design für digitale Zahnmedizin',
+                    anteriores: {
+                        title: 'Frontzahnrestaurationen',
+                        description: 'Design von Frontzahnveneers und -kronen mit perfekter Anatomie und natürlicher Ästhetik für harmonische Lächeln.'
+                    },
+                    fixas: {
+                        title: 'Festsitzender Zahnersatz',
+                        description: 'Mehrgliedrige Brücken mit präzisem anatomischen Design, idealer Okklusionsverteilung und robusten Verbindungen.'
+                    },
+                    posteriores: {
+                        title: 'Seitenzahnrestaurationen',
+                        description: 'Inlays, Onlays und Overlays mit detaillierter Okklusionsanatomie für perfekte Kaufunktionalität.'
+                    },
+                    implantodontia: {
+                        title: 'Implantologie',
+                        description: 'Präzise chirurgische Führungen, Implantatstangen und vollständige digitale Planung für komplexe Fälle.'
+                    },
+                    enceramentos: {
+                        title: 'Wachs-Ups',
+                        description: 'Virtuelle diagnostische und ästhetische Wachs-Ups für vorläufige Planung komplexer Fälle und Ergebnisanalyse.'
+                    }
+                },
+                services: {
+                    title: 'Unsere Dienstleistungen',
+                    subtitle: 'Wir verwandeln intraorale Scans in digitale Prothetik-Projekte, bereit für die Produktion',
+                    esteticas: {
+                        title: 'Ästhetische Restaurationen',
+                        description: 'Hochpräzises CAD-Design für Restaurationen mit Fokus auf Ästhetik und Funktionalität'
+                    },
+                    fixas: {
+                        title: 'Festsitzender Zahnersatz',
+                        description: 'Brücken und komplexe prothetische Strukturen mit idealer Okklusionsverteilung'
+                    },
+                    implantes: {
+                        title: 'Digitale Implantologie',
+                        description: 'Vollständige Lösungen für die Implantatrehabilitation'
+                    },
+                    planejamento: {
+                        title: 'Digitale Planung',
+                        description: 'Digitale Analyse und Planung für vorhersagbare Ergebnisse'
+                    },
+                    complementares: {
+                        title: 'Zusätzliche Dienstleistungen',
+                        description: 'Zusätzliche Lösungen zur Optimierung Ihres digitalen Workflows'
+                    }
+                },
+                differentials: {
+                    title: 'Unsere Vorteile',
+                    subtitle: 'Warum Lumen CAD Design für Ihre prothetischen Projekte wählen',
+                    rapidez: {
+                        title: 'Geschwindigkeit',
+                        description: 'Schnelle Lieferung ohne Qualitätskompromisse. Optimierter digitaler Workflow für enge Termine und klinische Notfälle.'
+                    },
+                    precisao: {
+                        title: 'Präzision',
+                        description: 'Hochpräzises CAD-Design mit modernster Technologie für perfekte Anpassungen und klinisch vorhersagbare Ergebnisse.'
+                    },
+                    estetica: {
+                        title: 'Ästhetik',
+                        description: 'Fokus auf ästhetische Exzellenz mit personalisierter Zahnanatomie, die individuelle Merkmale jedes Patienten respektiert.'
+                    },
+                    inovacao: {
+                        title: 'Innovation',
+                        description: 'Vollständiger und innovativer digitaler Workflow, der Überraschungen eliminiert und konsistente, reproduzierbare Ergebnisse gewährleistet.'
+                    }
+                },
+                footer: {
+                    copyright: '© 2025 Lumen CAD Design. Alle Rechte vorbehalten. Digitales Zahnmedizin-Studio - Schaffung von Lächeln mit Präzision und Innovation.'
+                }
+            },
+            es: {
+                nav: {
+                    inicio: 'Inicio',
+                    portfolio: 'Portafolio',
+                    servicos: 'Servicios',
+                    diferenciais: 'Ventajas'
+                },
+                hero: {
+                    subtitle: 'Estudio de Odontología Digital',
+                    title: 'Lumen CAD',
+                    titleSuffix: 'Design',
+                    description: 'Creando sonrisas y prótesis dentales con soluciones de alta precisión para dentistas y laboratorios',
+                    cta: 'Solicitar Presupuesto'
+                },
+                portfolio: {
+                    title: 'Nuestro Portafolio',
+                    subtitle: 'Ejemplos de nuestra excelencia en diseño CAD para odontología digital',
+                    anteriores: {
+                        title: 'Restauraciones Anteriores',
+                        description: 'Diseño de carillas y coronas anteriores con anatomía perfecta y estética natural, garantizando sonrisas armoniosas.'
+                    },
+                    fixas: {
+                        title: 'Prótesis Fijas',
+                        description: 'Puentes de múltiples elementos con diseño anatómico preciso, distribución oclusal ideal y conexiones robustas.'
+                    },
+                    posteriores: {
+                        title: 'Restauraciones Posteriores',
+                        description: 'Inlays, onlays y overlays con anatomía oclusal detallada para perfecta funcionalidad masticatoria.'
+                    },
+                    implantodontia: {
+                        title: 'Implantología',
+                        description: 'Guias quirúrgicos precisos, barras sobre implantes y planificación digital completa para casos complejos.'
+                    },
+                    enceramentos: {
+                        title: 'Encerados',
+                        description: 'Encerados diagnósticos y estéticos virtuales para planificación previa de casos complejos y análisis de resultados.'
+                    }
+                },
+                services: {
+                    title: 'Nuestros Servicios',
+                    subtitle: 'Transformamos escaneos intraorales en proyectos protésicos digitales listos para producción',
+                    esteticas: {
+                        title: 'Restauraciones Estéticas',
+                        description: 'Diseño CAD de alta precisión para restauraciones con enfoque en estética y funcionalidad'
+                    },
+                    fixas: {
+                        title: 'Prótesis Fijas',
+                        description: 'Puentes y estructuras protésicas complejas con distribución oclusal ideal'
+                    },
+                    implantes: {
+                        title: 'Implantología Digital',
+                        description: 'Soluciones completas para rehabilitación sobre implantes'
+                    },
+                    planejamento: {
+                        title: 'Planificación Digital',
+                        description: 'Análisis y planificación digital para resultados predecibles'
+                    },
+                    complementares: {
+                        title: 'Servicios Complementarios',
+                        description: 'Soluciones adicionales para optimizar su flujo digital'
+                    }
+                },
+                differentials: {
+                    title: 'Nuestras Ventajas',
+                    subtitle: 'Por qué elegir Lumen CAD Design para sus proyectos protésicos',
+                    rapidez: {
+                        title: 'Rapidez',
+                        description: 'Entrega ágil sin comprometer la calidad. Flujo digital optimizado para cumplir plazos ajustados y emergencias clínicas.'
+                    },
+                    precisao: {
+                        title: 'Precisión',
+                        description: 'Diseño CAD de alta precisión con tecnología de vanguardia, garantizando ajustes perfectos y resultados clínicamente predecibles.'
+                    },
+                    estetica: {
+                        title: 'Estética',
+                        description: 'Enfoque en la excelencia estética con anatomía dental personalizada, respetando características individuales de cada paciente.'
+                    },
+                    inovacao: {
+                        title: 'Innovación',
+                        description: 'Flujo digital completo e innovador que elimina sorpresas, garantizando resultados consistentes y reproducibles.'
+                    }
+                },
+                footer: {
+                    copyright: '© 2025 Lumen CAD Design. Todos los derechos reservados. Estudio de Odontología Digital - Creando sonrisas con precisión e innovación.'
+                }
+            }
+        };
+
+        let currentLanguage = 'pt';
+
+        // Language dropdown functionality
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function changeLanguage(langCode, langName) {
+            currentLanguage = langCode;
+            const currentLang = document.getElementById('current-lang');
+            currentLang.textContent = langCode.toUpperCase();
+            
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.remove('active');
+            
+            // Update all text content
+            updatePageContent(langCode);
+            
+            console.log(`Language changed to: ${langName} (${langCode})`);
+        }
+
+        function updatePageContent(langCode) {
+            const t = translations[langCode];
+            
+            // Navigation
+            document.querySelector('a[href="#home"]').textContent = t.nav.inicio;
+            document.querySelector('a[href="#portfolio"]').textContent = t.nav.portfolio;
+            document.querySelector('a[href="#services"]').textContent = t.nav.servicos;
+            document.querySelector('a[href="#differentials"]').textContent = t.nav.diferenciais;
+            
+            // Hero section
+            document.querySelector('.hero-subtitle').textContent = t.hero.subtitle;
+            document.querySelector('.hero h1 .brand').textContent = t.hero.title;
+            document.querySelector('.hero h1').innerHTML = `<span class="brand">${t.hero.title}</span> ${t.hero.titleSuffix}`;
+            document.querySelector('.hero p').textContent = t.hero.description;
+            document.querySelector('.cta-button').textContent = t.hero.cta;
+            
+            // Portfolio section
+            document.querySelector('#portfolio h2').textContent = t.portfolio.title;
+            document.querySelector('.portfolio-subtitle').textContent = t.portfolio.subtitle;
+            
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            portfolioItems[0].querySelector('h3').textContent = t.portfolio.anteriores.title;
+            portfolioItems[0].querySelector('p').textContent = t.portfolio.anteriores.description;
+            portfolioItems[1].querySelector('h3').textContent = t.portfolio.fixas.title;
+            portfolioItems[1].querySelector('p').textContent = t.portfolio.fixas.description;
+            portfolioItems[2].querySelector('h3').textContent = t.portfolio.posteriores.title;
+            portfolioItems[2].querySelector('p').textContent = t.portfolio.posteriores.description;
+            portfolioItems[3].querySelector('h3').textContent = t.portfolio.implantodontia.title;
+            portfolioItems[3].querySelector('p').textContent = t.portfolio.implantodontia.description;
+            portfolioItems[4].querySelector('h3').textContent = t.portfolio.enceramentos.title;
+            portfolioItems[4].querySelector('p').textContent = t.portfolio.enceramentos.description;
+            
+            // Services section
+            document.querySelector('#services h2').textContent = t.services.title;
+            document.querySelector('.services-subtitle').textContent = t.services.subtitle;
+            
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards[0].querySelector('h3').textContent = t.services.esteticas.title;
+            serviceCards[0].querySelector('p').textContent = t.services.esteticas.description;
+            serviceCards[1].querySelector('h3').textContent = t.services.fixas.title;
+            serviceCards[1].querySelector('p').textContent = t.services.fixas.description;
+            serviceCards[2].querySelector('h3').textContent = t.services.implantes.title;
+            serviceCards[2].querySelector('p').textContent = t.services.implantes.description;
+            serviceCards[3].querySelector('h3').textContent = t.services.planejamento.title;
+            serviceCards[3].querySelector('p').textContent = t.services.planejamento.description;
+            serviceCards[4].querySelector('h3').textContent = t.services.complementares.title;
+            serviceCards[4].querySelector('p').textContent = t.services.complementares.description;
+            
+            // Differentials section
+            document.querySelector('#differentials h2').textContent = t.differentials.title;
+            document.querySelector('.differentials-subtitle').textContent = t.differentials.subtitle;
+            
+            const differentialItems = document.querySelectorAll('.differential-item');
+            differentialItems[0].querySelector('h3').textContent = t.differentials.rapidez.title;
+            differentialItems[0].querySelector('p').textContent = t.differentials.rapidez.description;
+            differentialItems[1].querySelector('h3').textContent = t.differentials.precisao.title;
+            differentialItems[1].querySelector('p').textContent = t.differentials.precisao.description;
+            differentialItems[2].querySelector('h3').textContent = t.differentials.estetica.title;
+            differentialItems[2].querySelector('p').textContent = t.differentials.estetica.description;
+            differentialItems[3].querySelector('h3').textContent = t.differentials.inovacao.title;
+            differentialItems[3].querySelector('p').textContent = t.differentials.inovacao.description;
+            
+            
+            // Footer
+            document.querySelector('footer p').textContent = t.footer.copyright;
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('languageDropdown');
+            const button = document.querySelector('.language-button');
+            
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // ========================================
+        // CONFIGURAÇÃO DE IMAGENS - ALTERE AQUI
+        // ========================================
+        // 
+        // COMO USAR:
+        // 1. Para trocar as imagens, altere apenas as URLs abaixo
+        // 2. Você pode adicionar ou remover imagens de cada categoria
+        // 3. As imagens serão carregadas automaticamente no portfólio
+        // 4. Não precisa alterar mais nada no código!
+        //
+        // EXEMPLO:
+        // anteriores: [
+        //     'https://exemplo.com/imagem1.jpg',
+        //     'https://exemplo.com/imagem2.jpg',
+        //     'https://exemplo.com/imagem3.jpg'
+        // ],
+        
+        const imageConfig = {
+            anteriores: [
+                'https://i.ibb.co/tpHX7R4Z/20250923-215222-21-alisson-2025-09-23-16.png',
+                'https://i.ibb.co/Ngc2Yv7k/20250923-215201-21-alisson-2025-09-23-12.png',
+                'https://i.ibb.co/Q7NsZx9c/20250923-214908-21-alisson-2025-09-23-2.png'
+            ],
+            fixas: [
+                'https://i.ibb.co/Y7v810pk/20250925-224852-Portf-lio-upper-456-bridge-5.png',
+                'https://i.ibb.co/1GRdcK3N/20250925-224727-Portf-lio-upper-456-bridge-0.png'
+            ],
+            posteriores: [
+                'https://i.ibb.co/gbRm1hrq/20250918-215548-2025-09-18-00003-001-2.png',
+                'https://i.ibb.co/LDH20bbP/20250918-215543-2025-09-18-00003-001-1.png',
+                'https://i.ibb.co/6RG6b4fh/20250923-205840-perla-2025-09-23-8.png',
+                'https://i.ibb.co/m5wkdYyw/20250923-205748-perla-2025-09-23-2.png',
+            ],
+            implantodontia: [
+                'https://i.ibb.co/8DPzZtgC/20250921-220549-Gustavo-Brunherotto-fernando-castanheira-email-4.png',
+                'https://i.ibb.co/YTXDHMQZ/20250921-220519-Gustavo-Brunherotto-fernando-castanheira-email-1.png',
+            ],
+            enceramentos: [
+                'https://i.ibb.co/FqWt97BH/20250928-191657-Portf-lio-Case-2-0.png',
+                'https://i.ibb.co/gL9PxX7D/20250921-190552-2025-09-21-00003-001-1.png',
+            ]
+        };
+
+        // Portfolio Gallery System (usando configuração centralizada)
+        const galleryData = imageConfig;
+
+        let currentGallery = '';
+        let currentImageIndex = 0;
+
+        // Função para gerar automaticamente as galerias baseado na configuração
+        function generatePortfolioGalleries() {
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            
+            portfolioItems.forEach(item => {
+                const galleryName = item.getAttribute('data-gallery');
+                const images = imageConfig[galleryName];
+                
+                if (images && images.length > 0) {
+                    // Atualizar imagem principal
+                    const mainImage = item.querySelector('.gallery-main-image');
+                    mainImage.style.backgroundImage = `url('${images[0]}')`;
+                    
+                    // Limpar miniaturas existentes
+                    const thumbnailsContainer = item.querySelector('.gallery-thumbnails');
+                    thumbnailsContainer.innerHTML = '';
+                    
+                    // Gerar miniaturas automaticamente
+                    images.forEach((imageUrl, index) => {
+                        const thumb = document.createElement('div');
+                        thumb.className = `gallery-thumb ${index === 0 ? 'active' : ''}`;
+                        thumb.style.backgroundImage = `url('${imageUrl}')`;
+                        thumb.onclick = () => changeMainImage(thumb, imageUrl);
+                        thumbnailsContainer.appendChild(thumb);
+                    });
+                    
+                    // Remover contador de imagens
+                    const indicator = item.querySelector('.gallery-indicator');
+                    indicator.style.display = 'none';
+                }
+            });
+        }
+
+        // Executar quando a página carregar
+        document.addEventListener('DOMContentLoaded', generatePortfolioGalleries);
+        
+        // Executar também quando a página já estiver carregada (fallback)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', generatePortfolioGalleries);
+        } else {
+            generatePortfolioGalleries();
+        }
+
+        function changeMainImage(thumb, imageUrl) {
+            // Remove active class from all thumbs in this gallery
+            const gallery = thumb.closest('.portfolio-gallery');
+            gallery.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+            
+            // Add active class to clicked thumb
+            thumb.classList.add('active');
+            
+            // Change main image
+            const mainImage = gallery.querySelector('.gallery-main-image');
+            mainImage.style.backgroundImage = `url('${imageUrl}')`;
+        }
+
+        function openLightbox(galleryName, imageIndex) {
+            currentGallery = galleryName;
+            currentImageIndex = imageIndex;
+            
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxCounter = document.getElementById('lightboxCounter');
+            
+            const images = galleryData[galleryName];
+            if (images && images.length > 0) {
+                lightboxImage.src = images[imageIndex];
+                lightboxCounter.textContent = `${imageIndex + 1} / ${images.length}`;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextImage() {
+            const images = galleryData[currentGallery];
+            if (images && images.length > 1) {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                updateLightboxImage();
+            }
+        }
+
+        function previousImage() {
+            const images = galleryData[currentGallery];
+            if (images && images.length > 1) {
+                currentImageIndex = currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1;
+                updateLightboxImage();
+            }
+        }
+
+        function updateLightboxImage() {
+            const images = galleryData[currentGallery];
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxCounter = document.getElementById('lightboxCounter');
+            
+            if (images && images[currentImageIndex]) {
+                lightboxImage.src = images[currentImageIndex];
+                lightboxCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('active')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeLightbox();
+                        break;
+                    case 'ArrowLeft':
+                        previousImage();
+                        break;
+                    case 'ArrowRight':
+                        nextImage();
+                        break;
+                }
+            }
+        });
+
+        // Close lightbox when clicking outside image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
